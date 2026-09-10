@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+INSTALLED_APPS += ['django_bootstrap5']
 
 INSTALLED_APPS += ['home','fornecedores']
 

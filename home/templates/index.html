@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Desenvolvmento Web - Tecnico em Informatica</title>
-</head>
-<body>
-    <h1>Index</h1>
-</body>
-</html>
+{% extends "principal.html" %}
+{% block content %}
+<section class="section bg-success p-2 bg-opacity-75 py-4 py-md-5">
+    <div class="container text-center text-white px-3">
+        <h1 class="fs-1 display-1 fw-bold text-wrap">LavaCar</h1>
+        <h1 class="fs-3 display-4 text-wrap">Agendamento de Horários</h1>
+        <p class="lead font-weight-normal text-wrap opacity-90 fs-6 fs-md-5 mb-0">
+            Sistema para agendamento de horários
+        </p>
+    </div>
+</section>
+
+    {% block registros %}
+        {% include "registros.html" %}
+    {% endblock %}
+{% endblock %}
