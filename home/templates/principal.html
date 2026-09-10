@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load django_bootstrap5 %}
 <html lang="pt-br" data-bs-theme="light">
 {% block head %}
 	{% include "head.html" %}
@@ -30,8 +31,8 @@
 									Clientes
 								</a>
 								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="#">Cadastrar Cliente</a></li>
-									<li><a class="dropdown-item" href="#">Listar Clientes</a></li>
+									<li><a class="dropdown-item" href="{% url 'cliente_adicionar' %}">Cadastrar Cliente</a></li>
+									<li><a class="dropdown-item" href="{% url 'clientes' %}">Listar Clientes</a></li>
 								</ul>
 							</li>
 							<li class="nav-item dropdown">
@@ -89,6 +90,11 @@
                 </nav>
             </div>
         </section>
+		{% if messages %}
+			<div class="container-fluid p-3">
+				{% bootstrap_messages %}
+			</div>
+		{% endif %}
 	{% block content %} {% endblock %}
 
 	{% block footer %}

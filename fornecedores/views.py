@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
@@ -9,6 +10,7 @@ class FornecedoresView(ListView):
     model = Fornecedor
     template_name = 'fornecedores.html'
     context_object_name = 'fornecedores'
+    paginate_by = 20
 
     def get_queryset(self):
         buscar = self.request.GET.get('buscar')
@@ -18,20 +20,23 @@ class FornecedoresView(ListView):
         return qs
 
 
-class FornecedorAddView(CreateView):
+class FornecedorAddView(SuccessMessageMixin,CreateView):
     model = Fornecedor
     form_class = FornecedorModelForm
     template_name = 'fornecedor_form.html'
     success_url = reverse_lazy('fornecedores')
+    success_message = 'Fornecedor cadstrado com sucesso!'
 
-class FornecedorUpdateView(UpdateView):
+class FornecedorUpdateView(SuccessMessageMixin,UpdateView):
     model = Fornecedor
     form_class = FornecedorModelForm
     template_name = 'fornecedor_form.html'
     success_url = reverse_lazy('fornecedores')
+    success_message = 'Fornecedor atualizado com sucesso!'
 
-class FornecedorDeleteView(DeleteView):
+class FornecedorDeleteView(SuccessMessageMixin,DeleteView):
     model = Fornecedor
     template_name = 'fornecedor_apagar.html'
     success_url = reverse_lazy('fornecedores')
+    success_message = 'Fornecedor apagado com sucesso!'
 # Create your views here.

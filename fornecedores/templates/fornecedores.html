@@ -1,6 +1,6 @@
 {% extends 'principal.html' %}
-
 {% load static %}
+{% load django_bootstrap5 %}
 {% block content %}
 <section class="py-3 py-md-5">
     <div class="container px-2 px-sm-3">
@@ -82,11 +82,18 @@
                                 </div>
                             </div>
                         {% endfor %}
+                        <div class="d-flex justify-content-center mt-4">
+                            {% bootstrap_pagination page_obj size="sm" extra=request.GET.urlencode %}
+                        </div>
                     </div>
                 </div>
             </div>
         {% else %}
-        <div> Nenhum FOrnecedor encontrado para a sua busaca ou nao ha´fornecedores cadastrados</div>
+        <div class="alert alert-warning alert-dismissible fade show rounded-3 shadow-sm d-flex align-items-center" role="alert">
+            <i class="fas fa-exclamation-circle me-2 fs-4"></i>
+            <div> Nenhum FOrnecedor encontrado para a sua busaca ou nao ha´fornecedores cadastrados</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         {% endif %}
     </div>
 </section>
