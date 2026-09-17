@@ -47,10 +47,10 @@
                                         <td class="text-muted text-break">{{ cliente.email }}</td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-3">
-                                                <a class="text-warning fs-5" href="#" title="Editar">
+                                                <a class="text-warning fs-5" href="{% url 'cliente_editar' cliente.pk %}" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a class="text-danger fs-5" href="#" title="Excluir">
+                                                <a class="text-danger fs-5" href="{% url 'cliente_apagar' cliente.pk %}" title="Excluir">
                                                     <i class="far fa-trash-alt"></i>
                                                 </a>
                                             </div>
@@ -81,10 +81,10 @@
                                     </div>
                                 </div>
                                 <div class="border-top pt-2 mt-2 d-flex justify-content-end gap-3">
-                                    <a class="btn btn-sm btn-outline-warning px-3" href="#">
+                                    <a class="btn btn-sm btn-outline-warning px-3" href="{% url 'cliente_editar' cliente.pk %}">
                                         <i class="fas fa-edit me-1"></i> Editar
                                     </a>
-                                    <a class="btn btn-sm btn-outline-danger px-3" href="#">
+                                    <a class="btn btn-sm btn-outline-danger px-3" href="{% url 'cliente_apagar' cliente.pk %}">
                                         <i class="far fa-trash-alt me-1"></i> Excluir
                                     </a>
                                 </div>
