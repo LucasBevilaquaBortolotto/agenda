@@ -1,0 +1,107 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
+<section class="py-3 py-md-5">
+    <div class="container px-2 px-sm-3">
+        <form action="" method="GET" class="mb-4">
+            <div class="row g-2 align-items-center">
+                <div class="col-12 col-md-3 col-lg-2 d-none d-md-block text-md-end">
+                    <label class="form-label fw-bold m-0">Serviço:</label>
+                </div>
+                <div class="col-12 col-md-6 col-lg-7">
+                    <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                           placeholder="Digite o nome ou a descrição do serviço...">
+                </div>
+                <div class="col-12 col-md-3 col-lg-3 d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>Buscar
+                    </button>
+                </div>
+            </div>
+        </form>
+        {% if servicos %}
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-2 p-sm-3 p-md-4">
+                    <h3 class="text-center mb-4 fw-bold text-dark fs-4 fs-md-3">Serviços Cadastrados</h3>
+
+                    <div class="table-responsive d-none d-md-block">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Descrição</th>
+                                    <th>Preço</th>
+                                    <th>Produto(s) usado(s) no serviço</th>
+                                    <th class="text-center" style="width: 120px;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for servico in servicos %}
+                                    <tr>
+                                        <td class="fw-bold text-dark">{{ servico.nome }}</td>
+                                        <td class="text-muted text-break" style="max-width: 250px;">{{ servico.descricao }}</td>
+                                        <td class="text-success fw-medium text-nowrap"> R$ {{ servico.preco  }} </td>
+                                        
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-3">
+                                                <a class="text-warning fs-5" href="{% url 'servico_editar' servico.pk %}" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a class="text-danger fs-5" href="{% url 'servico_apagar' servico.pk %}" title="Excluir">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-md-none">
+                        {% for servico in servicos %}
+                            <div class="p-3 mb-3 bg-light border rounded-3 position-relative shadow-sm">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="w-75">
+                                        <span class="text-muted small d-block">Serviço</span>
+                                        <span class="fw-bold text-dark fs-5 text-break">{{ servico.nome }}</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="text-muted small d-block">Preço</span>
+                                        <span class="fw-bold text-success text-nowrap">R$ {{ servico.preco }} </span>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="text-muted small d-block">Descrição</span>
+                                    <p class="small text-secondary mb-0 text-break">{{ servico.descricao }}</p>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="text-muted small d-block mb-1">Produtos Utilizados</span>
+                                    
+                                </div>
+                                <div class="border-top pt-2 mt-2 d-flex justify-content-end gap-2">
+                                    <a class="btn btn-sm btn-outline-warning px-3" href="{% url 'servico_editar' servico.pk %}">
+                                        <i class="fas fa-edit me-1"></i> Editar
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-danger px-3" href="{% url 'servico_apagar' servico.pk %}">
+                                        <i class="far fa-trash-alt me-1"></i> Excluir
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex justify-content-center mt-4">
+                        {% bootstrap_pagination page_obj size="sm" extra=request.GET.urlencode %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning alert-dismissible fade show rounded-3 shadow-sm d-flex align-items-center" role="alert">
+                <i class="fas fa-exclamation-circle me-2 fs-4"></i>
+                <div>Nenhum serviço encontrado para a sua busca ou não há serviços cadastrados.</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
