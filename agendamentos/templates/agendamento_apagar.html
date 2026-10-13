@@ -1,0 +1,42 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="container my-4 px-3">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow border-0 rounded-3">
+                    <div class="card-body p-4">
+                        <h3 class="card-title text-center mb-4 fw-bold text-dark">Dados do agendamento</h3>
+                        <div class="mb-4 bg-light p-3 rounded-3 border-start border-success border-3">
+                            <p class="mb-2 fs-6"><strong><i class="far fa-clock me-2 text-success"></i>Horário: </strong>{{ object.horario }}</p>
+                            <p class="mb-0 fs-6"><strong><i class="far fa-user me-2 text-success"></i>Cliente: </strong>{{ object.cliente }}</p>
+                        </div>
+                        <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-dark rounded-3 p-3 mb-4">
+                            <p class="m-0 fs-6 text-wrap">
+                                <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                                Confirma a exclusão do agendamento: <strong>{{ object }}</strong>?
+                            </p>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data" novalidate>
+                            {% csrf_token %}
+                            {% if form.errors %}
+                                <div class="alert alert-danger p-2 rounded-3 small mb-3">
+                                    {% bootstrap_form_errors form %}
+                                </div>
+                            {% endif %}
+                            {% bootstrap_form form %}
+                            <div class="d-grid d-sm-flex justify-content-sm-end gap-2 mt-4">
+                                <a href="{% url 'agendamentos' %}" class="btn btn-outline-secondary order-2 order-sm-1">
+                                    Cancelar
+                                </a>
+                                <div class="order-1 order-sm-2 d-grid d-sm-block">
+                                    {% bootstrap_button button_type="submit" content="Sim, Excluir" button_class="btn btn-danger w-100" %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

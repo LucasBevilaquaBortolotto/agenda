@@ -1,0 +1,136 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
+<section class="py-4">
+    <div class="container px-3">
+        <form action="" method="GET" class="mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-12 col-md-5">
+                    {% bootstrap_field form.cliente %}
+                </div>
+                <div class="col-12 col-md-5">
+                    {% bootstrap_field form.funcionario %}
+                </div>
+                <div class="col-12 col-md-2 d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>Buscar
+                    </button>
+                </div>
+            </div>
+        </form>
+          {% if agendamentos %}
+    <div class="card shadow-sm border-0 rounded-3 d-none d-md-block">
+        <div class="card-body p-4">
+            <h3 class="text-center mb-4 fw-bold text-dark">Agendamentos Cadastrados</h3>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-success">
+                        <tr>
+                            <th style="width: 15%;">Horário</th>
+                            <th style="width: 20%;">Cliente</th>
+                            <th style="width: 20%;">Funcionário</th>
+                            <th style="width: 33%;">Serviços</th>
+                            <th class="text-center" style="width: 12%;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agendamento in agendamentos %}
+                            <tr>
+                                <td class="fw-bold">{{ agendamento.horario }}</td>
+                                <td>{{ agendamento.cliente }}</td>
+                                <td>{{ agendamento.funcionario }}</td>
+                                <td>
+                                    <div class="small text-muted mb-1">
+                                        
+                                            <div class="mb-1 text-wrap">
+                                                •  - <span class="text-success fw-bold"></span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary p-1 rounded-sm small d-inline-block mt-1">
+                                                </span>
+                                            </div>
+                                    </div>
+                                    <strong class="text-success d-block mt-2">Total: </strong>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                            <a class="text-warning fs-5 text-decoration-none" href="{% url 'agendamentos_editar' agendamento.pk %}" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="text-danger fs-5 text-decoration-none" href="{% url 'agendamentos_apagar' agendamento.pk %}" title="Excluir">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                            <span class="text-muted opacity-50 fs-5" title="Agendamento Concluído">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                            <span class="text-muted opacity-50 fs-5" title="Agendamento Concluído">
+                                                <i class="far fa-trash-alt"></i>
+                                            </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="d-block d-md-none">
+        <h4 class="text-center mb-3 fw-bold text-dark">Agendamentos</h4>
+        {% for agendamento in agendamentos %}
+            <div class="card shadow-sm border-0 rounded-3 mb-3">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center py-2">
+                    <span class="fw-bold text-primary">
+                        <i class="far fa-clock me-1"></i>{{ agendamento.horario }}
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    <div class="mb-2">
+                        <small class="text-muted d-block">Cliente</small>
+                        <strong class="fs-6 text-dark"><i class="fas fa-user me-1 text-secondary"></i>{{agendamento.cliente }}</strong>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Profissional</small>
+                        <span class="text-dark"><i class="fas fa-user-tie me-1 text-secondary"></i>{{ agendamento.funcionario }}</span>
+                    </div>
+
+                    <hr class="my-2 text-muted opacity-25">
+
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-1">Serviços Solicitados:</small>
+                            <div class="d-flex justify-content-between align-items-center mb-1 bg-light p-2 rounded">
+                                <span class="small fw-semibold"></span>
+                                <div class="text-end">
+                                    <span class="small text-success fw-bold d-block">R$ </span>
+                                    <span class="badge bg-secondary bg-opacity-25 text-dark" style="font-size: 0.7rem;">
+                                    </span>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <div>
+                            <small class="text-muted d-block">Valor Total</small>
+                            <span class="fs-5 fw-bold text-success">R$ </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+        {% bootstrap_pagination page_obj size="sm" extra=query_params %}
+    </div>
+    {% else %}
+        <div class="alert alert-warnig alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>Nenhum agendamento encontrado para a sua busca ou não ha agendamensto cadastrados.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
