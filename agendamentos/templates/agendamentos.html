@@ -42,14 +42,16 @@
                                 <td>{{ agendamento.funcionario }}</td>
                                 <td>
                                     <div class="small text-muted mb-1">
-                                        
+                                        {% for servico in agendamento.ordem_servicos_agendamento.all %}
                                             <div class="mb-1 text-wrap">
-                                                •  - <span class="text-success fw-bold"></span>
+                                                • {{ servico }} - <span class="text-success fw-bold">R$ {{ servico.preco }}</span>
                                                 <span class="badge bg-secondary bg-opacity-10 text-secondary p-1 rounded-sm small d-inline-block mt-1">
+                                                    {{ servico.get_situacao_display }}
                                                 </span>
                                             </div>
+                                        {% endfor %}
                                     </div>
-                                    <strong class="text-success d-block mt-2">Total: </strong>
+                                    <strong class="text-success d-block mt-2">Total: {{ agendamento.valor }}</strong>
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center align-items-center gap-2">
@@ -101,20 +103,23 @@
 
                     <div class="mb-3">
                         <small class="text-muted d-block mb-1">Serviços Solicitados:</small>
+                        {% for servico in agendamento.ordem_servicos_agendamento.all %}
                             <div class="d-flex justify-content-between align-items-center mb-1 bg-light p-2 rounded">
-                                <span class="small fw-semibold"></span>
+                                <span class="small fw-semibold">{{ servico.servico.nome }}</span>
                                 <div class="text-end">
-                                    <span class="small text-success fw-bold d-block">R$ </span>
+                                    <span class="small text-success fw-bold d-block">R$ {{ servico.preco }} </span>
                                     <span class="badge bg-secondary bg-opacity-25 text-dark" style="font-size: 0.7rem;">
+                                        {{ servico.get_situacao_display }}
                                     </span>
                                 </div>
                             </div>
+                        {% endfor %}
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center pt-2 border-top">
                         <div>
                             <small class="text-muted d-block">Valor Total</small>
-                            <span class="fs-5 fw-bold text-success">R$ </span>
+                            <span class="fs-5 fw-bold text-success">R$ {{ agendamento.valor }} </span>
                         </div>
 
                     </div>

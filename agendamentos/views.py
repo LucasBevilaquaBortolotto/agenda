@@ -1,9 +1,13 @@
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+
+from django.db import transaction
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from agendamentos.forms import AgendamentoListForm, AgendamentoModelForm
+
+from agendamentos.forms import AgendamentoListForm, AgendamentoModelForm, AgendamentosServicoInline
 from agendamentos.models import Agendamento
 
 
@@ -37,7 +41,32 @@ class AgendamentosView(ListView):
         return context
 
 
-class AgendamentoAddView(SuccessMessageMixin, CreateView):
+class AgendamentoFormsetMixin:
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data['frm_inline'] = AgendamentosServicoInline(self.request.POST, instance=self.object)
+        else:
+            data['frm_inline'] = AgendamentosServicoInline(instance=self.object)
+
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        frm_inline = context['frm_inline']
+
+        if frm_inline.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                frm_inline.instance = self.object
+                frm_inline.save()
+            if hasattr(self,'success_message'):
+                messages.success(self.request, self.success_message)
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+class AgendamentoAddView(AgendamentoFormsetMixin, CreateView):
     model = Agendamento
     form_class = AgendamentoModelForm
     template_name = 'agendamento_form.html'
@@ -45,7 +74,7 @@ class AgendamentoAddView(SuccessMessageMixin, CreateView):
     success_message = 'Agendamento criado com sucesso!'
 
 
-class AgendamentoUpdateView(SuccessMessageMixin, UpdateView):
+class AgendamentoUpdateView(AgendamentoFormsetMixin, UpdateView):
     model = Agendamento
     form_class = AgendamentoModelForm
     template_name = 'agendamento_form.html'
@@ -57,3 +86,4 @@ class AgendamentoDeleteView(SuccessMessageMixin, DeleteView):
     template_name = 'agendamento_apagar.html'
     success_url = reverse_lazy('agendamentos')
     success_message = 'Agendamento apagado com sucesso!'
+

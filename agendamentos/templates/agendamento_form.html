@@ -17,17 +17,13 @@
                             <div class="mb-4">
                                 {% bootstrap_form form %}
                             </div>
-                            <div class="d-grid d-sm-flex justify-content-sm-end gap-2 mt-4">
-                                <a href="{% url 'agendamentos' %}" class="btn btn-outline-secondary order-2 order-sm-1">
-                                    Cancelar
-                                </a>
-                            </div>
                             <h4 class="fw-bold text-secondary mb-3 fs-5">
                                 <i class="fas fa-list py-1 me-2"></i>Serviços agendados
                             </h4>
                             <div class="card border border-light-subtle rounded-3 mb-4">
                                 <div class="card-body p-2 p-md-3">
-                                    
+                                    {{ frm_inline.management_form }}
+                                    {% if frm_inline.errors %}
                                         <div class="card-alerta-estoque mb-3 alert alert-danger border-0 shadow-sm rounded-3">
                                             <div class="alerta-cabecalho d-flex align-items-center mb-2">
                                                 <span class="alerta-icone fs-5 me-2">⚠️</span>
@@ -36,10 +32,26 @@
                                             <div class="alerta-corpo">
                                                 <p class="mb-2">Não foi possível salvar o agendamento devido aos seguintes problemas nos serviços:</p>
                                                 <ul class="mb-0 ps-3">
-                                                    
+                                                    {% for form_erro in frm_inline %}
+                                                        {% if form_erro.non_field_errors %}
+                                                        <li>
+                                                            <strong>Serviço {% if form_erro.instance.servico %}
+                                                                                "{{ form_erro.instance.servico }}"
+                                                                            {% else %}
+                                                                                novo
+                                                                            {% endif %}:</strong>
+                                                            <span class="erro-mensagem">
+                                                                {% for error in form_erro.non_field_errors %}
+                                                                    {{ error }}
+                                                                {% endfor %}}
+                                                            </span>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
                                                 </ul>
                                             </div>
                                         </div>
+                                    {% endif %}
                                     <div class="table-responsive text-nowrap">
                                         <table class="table table-hover align-middle m-0">
                                             <thead class="table-success opacity-90">
@@ -52,7 +64,22 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
+                                                {% for campo in frm_inline %}
+                                                    <tr>
+                                                        {% for hidden in campo.hidden_fields %}
+                                                            {{ hidden }}
+                                                        {% endfor %}
+                                                        <td>{% bootstrap_field campo.servico show_label=False wrapper_class="mb-0" %}</td>
+                                                        <td>{% bootstrap_field campo.funcionario show_label=False wrapper_class="mb-0" %}</td>
+                                                        <td>{% bootstrap_field campo.situacao show_label=False wrapper_class="mb-0" %}</td>
+                                                        <td>{% bootstrap_field campo.observacoes show_label=False wrapper_class="mb-0" %}</td>
+                                                        <td class="text-center text-danger">
+                                                            {% if campo.instance.pk %}
+                                                                {% bootstrap_field campo.DELETE show_label=False wrapper_class="mb-0 d-inline-block" %}
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>
