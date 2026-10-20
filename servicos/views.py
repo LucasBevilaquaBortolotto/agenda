@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, ProtectedError
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -83,4 +84,15 @@ class ServicoDeleteView(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('servicos')
     success_message = 'Servico apagado com sucesso'
 
+
+    def post(self,request,*args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            return super().post(request,*args,**kwargs)
+        except ProtectedError:
+            messages.error(request, f'O Serviço {self.object} não pode ser excluido'
+                           f'Esse Serviço esta regitrado no fornecimento de produtos')
+
+            return redirect(success_url)
 

@@ -1,8 +1,10 @@
 from decimal import Decimal
 
 from django.core.validators import MinValueValidator
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q, Sum
+
+from servicos.models import ProdutosServico
 
 
 class Agendamento(models.Model):
@@ -11,16 +13,33 @@ class Agendamento(models.Model):
     funcionario = models.ForeignKey('funcionarios.Funcionario',verbose_name='Funcionario', help_text='Nome do funcionario',  on_delete=models.PROTECT)
     servicos = models.ManyToManyField('servicos.Servico', verbose_name='Serviço', through='agendamentos.OrdemServicos')
     valor = models.DecimalField('Valor total', max_digits=6, decimal_places=2, default=0.00)
+    status = models.CharField('Status', max_length=1, help_text='Status do agendamento', default='A')
 
     class Meta:
         verbose_name = 'Agendamento'
         verbose_name_plural = 'Agendamentos'
+        ordering = ['-horario']
 
     def atualizar_valor_total(self):
         total = self.ordem_servicos_agendamento.filter(~Q(situacao='C')).aggregate(total=Sum('preco'))['total'] or Decimal('0.00')
         Agendamento.objects.filter(pk=self.pk).update(valor=total)
         self.valor = total
 
+    def finalizar_atendimento(self):
+        if self.status != 'A':
+            return False, "Este agendamento ja esta finalizado ou cancelado"
+        if self.ordem_servicos_agendamento.filter(situacao='A').exists():
+            return False, "Existem Serviços com a situação em aberto"
+        with transaction.atomic():
+            for ordem in self.ordem_servicos_agendamento.filter(situacao='R'):
+                insumos = ProdutosServico.objects.filter(servico=ordem.servico).select_related('produto')
+                for insumo in insumos:
+                    produto = insumo.produto
+                    produto.quantidade -= insumo.quantidade
+                    produto.save()
+            self.status = 'F'
+            self.save()
+        return True, "Agendamento finalizado com sucesso"
 
     def __str__(self):
         return f'Cliente: {self.cliente}'

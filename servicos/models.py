@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Q
+from django.db.models.functions import Upper
 
 
 class Servico(models.Model):
@@ -14,6 +15,7 @@ class Servico(models.Model):
 class Meta:
     verbose_name = 'Servico'
     verbose_name_plural = 'Servicos'
+    ordering = [Upper ('nome')]
 
 def __str__(self):
     return self.nome

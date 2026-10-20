@@ -55,18 +55,28 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center align-items-center gap-2">
+                                        {% if agendamento.status == 'A' %}
                                             <a class="text-warning fs-5 text-decoration-none" href="{% url 'agendamentos_editar' agendamento.pk %}" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a class="text-danger fs-5 text-decoration-none" href="{% url 'agendamentos_apagar' agendamento.pk %}" title="Excluir">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
+                                        {% else %}
                                             <span class="text-muted opacity-50 fs-5" title="Agendamento Concluído">
                                                 <i class="fas fa-edit"></i>
                                             </span>
                                             <span class="text-muted opacity-50 fs-5" title="Agendamento Concluído">
                                                 <i class="far fa-trash-alt"></i>
                                             </span>
+                                        {% endif %}
+
+                                        <form action="{% url 'agendamento_exibir' agendamento.pk %}" method="POST" class="m-0">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-link p-0 text-success fs-5 text-decoration-none" title="Finalizar Atendimento">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

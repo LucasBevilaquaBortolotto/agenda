@@ -1,6 +1,7 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.db.models import ProtectedError
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
@@ -49,4 +50,15 @@ class ProdutoDeleteView(SuccessMessageMixin, DeleteView):
     template_name = 'produto_apagar.html'
     success_url = reverse_lazy('produtos')
     success_message = 'Produto apagado com sucesso'
+
+    def post(self,request,*args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            return super().post(request,*args,**kwargs)
+        except ProtectedError:
+            messages.error(request, f'O Produto {self.object} não pode ser excluido'
+                           f'Esse produtos esta regitrado no fornecimento de produtos')
+
+            return redirect(success_url)
 

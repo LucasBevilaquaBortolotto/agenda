@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.functions import Upper
 
 from clientes.models import Pessoa
 
@@ -9,6 +10,7 @@ class Funcionario(Pessoa):
     class Meta:
         verbose_name = 'Funcionario'
         verbose_name_plural = 'Funcionarios'
+        ordering = [Upper ('nome')]
 
 
     def __str__(self):

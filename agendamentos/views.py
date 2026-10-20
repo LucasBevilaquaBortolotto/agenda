@@ -2,10 +2,9 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 
 from django.db import transaction
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 from agendamentos.forms import AgendamentoListForm, AgendamentoModelForm, AgendamentosServicoInline
 from agendamentos.models import Agendamento
@@ -86,4 +85,18 @@ class AgendamentoDeleteView(SuccessMessageMixin, DeleteView):
     template_name = 'agendamento_apagar.html'
     success_url = reverse_lazy('agendamentos')
     success_message = 'Agendamento apagado com sucesso!'
+
+
+
+class AgendamentoExibir(DetailView):
+    model = Agendamento
+    template_name = 'agendamento_exibir.html'
+    def post(self, request, *args, **kwargs):
+        agendamento = self.get_object()
+        sucesso, mensagem = agendamento.finalizar_atendimento()
+        if sucesso:
+            messages.success(request, mensagem)
+        else:
+            messages.warning(request, mensagem)
+        return redirect('agendamento_exibir', pk=agendamento.pk)
 
