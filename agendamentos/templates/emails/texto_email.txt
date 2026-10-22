@@ -1,0 +1,19 @@
+Olá {{cliente}}!
+Estamos enviando este e-mail para comunicar que os serviços que você solicitou já foram concluidos.
+
+Dados do Atendimento
+Horário: {{ horario }}
+Funcionario responsavel pelo agendamento: {{ funcionario }}
+
+Serviços realizados
+{% for desc in descricao %}
+    {{ desc }} \n
+{% endfor %}
+
+Valor total: {{ valor }}
+
+Informamos que seu veiculo esta a disposição e pode ser retirado
+
+Agradecemos pela preferencia! Volte sempre!
+
+LavaCar

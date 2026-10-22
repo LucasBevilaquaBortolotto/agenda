@@ -11,8 +11,8 @@ class Pessoa(models.Model):
     class Meta:
         abstract = True
 
-        def __str__(self):
-            return self.nome
+    def __str__(self):
+        return self.nome
 
 
 class Cliente(Pessoa):
@@ -24,6 +24,6 @@ class Cliente(Pessoa):
         verbose_name_plural = 'Clientes'
         ordering = [Upper ('nome')]
 
-        def __str__(self):
-            return super().nome
+    def __str__(self):
+        return super().nome
 # Create your models here.
