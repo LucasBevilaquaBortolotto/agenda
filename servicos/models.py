@@ -12,13 +12,13 @@ class Servico(models.Model):
     descricao = models.TextField('Descrição', max_length=300, help_text='Descrição e observações do serviço')
     produtos = models.ManyToManyField('produtos.Produto', through='servicos.ProdutosServico', related_name='servico_produtos')
 
-class Meta:
-    verbose_name = 'Servico'
-    verbose_name_plural = 'Servicos'
-    ordering = [Upper ('nome')]
+    class Meta:
+        verbose_name = 'Servico'
+        verbose_name_plural = 'Servicos'
+        ordering = [Upper ('nome')]
 
-def __str__(self):
-    return self.nome
+    def __str__(self):
+        return self.nome
 
 
 

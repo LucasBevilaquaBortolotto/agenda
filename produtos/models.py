@@ -11,12 +11,12 @@ class Produto(models.Model):
     fornecedor = models.ForeignKey(fornecedores.models.Fornecedor, verbose_name='Fornecedor', help_text='Nome do fornecedor', on_delete=models.PROTECT, related_name='fornecedores')
 
 
-class Meta:
-    verbose_name = 'Produto'
-    verbose_name_plural = 'Produtos'
-    ordering = [Upper ('nome')]
+    class Meta:
+        verbose_name = 'Produto'
+        verbose_name_plural = 'Produtos'
+        ordering = [Upper ('nome')]
 
-def __str__(self):
-    return self.nome
+    def __str__(self):
+        return self.nome
 
 # Create your models here.
