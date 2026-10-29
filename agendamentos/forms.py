@@ -23,9 +23,6 @@ class AgendamentoModelForm(forms.ModelForm):
             'cliente': {'required': 'Cliente Obrigatorio'},
             'funcionario': {'required': 'Funcionario Obrigatorio'}
         }
-
-AgendamentosServicoInline = inlineformset_factory(Agendamento, OrdemServicos,fields=('servico','funcionario','situacao','observacoes'),extra=1, can_delete=True)
-
 class BaseOrdemServicoFormSet(forms.BaseInlineFormSet):
     def clean(self):
         super().clean()
@@ -51,3 +48,6 @@ class BaseOrdemServicoFormSet(forms.BaseInlineFormSet):
                     None,
                     f"Estoque insuficiente para: {lista_produtos}"
                     )
+
+AgendamentosServicoInline = inlineformset_factory(Agendamento, OrdemServicos,fields=('servico','funcionario','situacao','observacoes'),extra=1, can_delete=True, formset=BaseOrdemServicoFormSet)
+

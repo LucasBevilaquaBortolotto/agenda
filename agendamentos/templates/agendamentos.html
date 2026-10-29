@@ -70,13 +70,14 @@
                                                 <i class="far fa-trash-alt"></i>
                                             </span>
                                         {% endif %}
-
+                                        {% if perms.agendamentos.fechar_agendamento %}
                                         <form action="{% url 'agendamento_exibir' agendamento.pk %}" method="POST" class="m-0">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-link p-0 text-success fs-5 text-decoration-none" title="Finalizar Atendimento">
                                                 <i class="fas fa-check-circle"></i>
                                             </button>
                                         </form>
+                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>

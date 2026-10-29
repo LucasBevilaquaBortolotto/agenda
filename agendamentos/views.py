@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 
@@ -12,7 +13,7 @@ from agendamentos.forms import AgendamentoListForm, AgendamentoModelForm, Agenda
 from agendamentos.models import Agendamento
 
 
-class AgendamentosView(ListView):
+class AgendamentosView(LoginRequiredMixin,ListView):
     model = Agendamento
     template_name = 'agendamentos.html'
     context_object_name = 'agendamentos'
@@ -67,7 +68,7 @@ class AgendamentoFormsetMixin:
         else:
             return self.render_to_response(self.get_context_data(form=form))
 
-class AgendamentoAddView(AgendamentoFormsetMixin, CreateView):
+class AgendamentoAddView(LoginRequiredMixin, AgendamentoFormsetMixin, CreateView):
     model = Agendamento
     form_class = AgendamentoModelForm
     template_name = 'agendamento_form.html'
@@ -75,14 +76,14 @@ class AgendamentoAddView(AgendamentoFormsetMixin, CreateView):
     success_message = 'Agendamento criado com sucesso!'
 
 
-class AgendamentoUpdateView(AgendamentoFormsetMixin, UpdateView):
+class AgendamentoUpdateView(LoginRequiredMixin,AgendamentoFormsetMixin, UpdateView):
     model = Agendamento
     form_class = AgendamentoModelForm
     template_name = 'agendamento_form.html'
     success_url = reverse_lazy('agendamentos')
     success_message = 'Agendamento atualizado com sucesso!'
 
-class AgendamentoDeleteView(SuccessMessageMixin, DeleteView):
+class AgendamentoDeleteView(LoginRequiredMixin,SuccessMessageMixin, DeleteView):
     model = Agendamento
     template_name = 'agendamento_apagar.html'
     success_url = reverse_lazy('agendamentos')
@@ -90,7 +91,7 @@ class AgendamentoDeleteView(SuccessMessageMixin, DeleteView):
 
 
 
-class AgendamentoExibir(DetailView):
+class AgendamentoExibir(LoginRequiredMixin,DetailView):
     model = Agendamento
     template_name = 'agendamento_exibir.html'
     def post(self, request, *args, **kwargs):

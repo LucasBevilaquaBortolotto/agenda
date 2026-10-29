@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import ProtectedError
 from django.shortcuts import render, redirect
@@ -9,7 +10,9 @@ from clientes.forms import ClienteModelForm
 from clientes.models import Cliente
 
 
-class ClientesView(ListView):
+class ClientesView(PermissionRequiredMixin,ListView):
+    permission_required = 'clientes.view_cliente'
+    permission_denied_message = 'Visualizar cliente'
     model = Cliente
     template_name = 'clientes.html'
     context_object_name = 'clientes'
@@ -23,21 +26,27 @@ class ClientesView(ListView):
         return qs
 
 
-class ClienteAddView(SuccessMessageMixin, CreateView):
+class ClienteAddView(PermissionRequiredMixin,SuccessMessageMixin, CreateView):
+    permission_required = 'clientes.add_cliente'
+    permission_denied_message = 'Cadastrar Cliente'
     model = Cliente
     form_class = ClienteModelForm
     template_name = 'cliente_form.html'
     success_url = reverse_lazy('clientes')
     success_message = 'Cliente Cadastrado'
 
-class ClienteUpdateView(SuccessMessageMixin, UpdateView):
+class ClienteUpdateView(PermissionRequiredMixin,SuccessMessageMixin, UpdateView):
+    permission_required = 'clientes.change_cliente'
+    permission_denied_message = 'Editar Cliente'
     model = Cliente
     form_class = ClienteModelForm
     template_name = 'cliente_form.html'
     success_url = reverse_lazy('clientes')
     success_message = 'Cliente Alterado com sucesso'
 
-class ClienteDeleteView(SuccessMessageMixin, DeleteView):
+class ClienteDeleteView(PermissionRequiredMixin,SuccessMessageMixin, DeleteView):
+    permission_required = 'clientes.delete_cliente'
+    permission_denied_message = 'Deletar Cliente'
     model = Cliente
     template_name = 'cliente_apagar.html'
     success_url = reverse_lazy('clientes')
