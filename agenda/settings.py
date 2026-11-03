@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 from django.conf.global_settings import STATICFILES_DIRS, LOGIN_REDIRECT_URL
 
@@ -22,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t#3b%731q+opi9@x^c+732#fbcm-n(smch!pi*f42#9)!udjg%'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',  cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'agenda.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'agenda',
+        'USER': 'postgres',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -134,17 +139,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MAILERS = {
     'default': {
         # Alterado para o backend de SMTP real
-        'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+        'BACKEND': config('EMAIL_BACKEND'),
         "OPTIONS": {
-            "host": "smtp.gmail.com",
-            "use_tls": True,
-            "username": "lucasbb6969@gmail.com",
-            "password": "lidlwsfskuajidjj", # Certifique-se de que esta é uma "Senha de App" gerada no painel do Google
+            "host": config('EMAIL_HOST'),
+            "use_tls": config('EMAIL_USE_TLS'),
+            "username": config('EMAIL_HOST_USER'),
+            "password": config('EMAIL_HOST_PASSWORD'),
         },
     },
 }
 
-DEFAULT_FROM_EMAIL = "lucasbb6969@gmail.com"
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'

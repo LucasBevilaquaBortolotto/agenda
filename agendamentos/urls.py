@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AgendamentosView, AgendamentoAddView, AgendamentoUpdateView, AgendamentoDeleteView, AgendamentoExibir
+from .views import AgendamentosView, AgendamentoAddView, AgendamentoUpdateView, AgendamentoDeleteView, AgendamentoExibir,AgendamentosGraficoView
 
 urlpatterns = [
     path('agendamentos', AgendamentosView.as_view(), name='agendamentos'),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('agendamentos/<int:pk>/editar/', AgendamentoUpdateView.as_view(), name='agendamentos_editar'),
     path('agendamentos/<int:pk>/apagar/', AgendamentoDeleteView.as_view(), name='agendamentos_apagar'),
     path('agendamentos/<int:pk>/exibir/', AgendamentoExibir.as_view(), name='agendamento_exibir'),
+    path('agendamentos/grafico', AgendamentosGraficoView.as_view(), name='agendamentos_grafico'),
 ]

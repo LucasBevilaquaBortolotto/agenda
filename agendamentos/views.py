@@ -127,3 +127,8 @@ class AgendamentoExibir(LoginRequiredMixin,DetailView):
                   fail_silently=False,
                   )
         return redirect('agendamentos')
+
+
+class AgendamentosGraficoView(ListView):
+    model = Agendamento
+    template_name = 'grafico.html'
