@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from django.contrib.auth.models import PermissionsMixin
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.db.models import Q, Sum
