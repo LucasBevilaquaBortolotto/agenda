@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+
+import cloudinary
+import dj_database_url
 from decouple import config
 
 from django.conf.global_settings import STATICFILES_DIRS, LOGIN_REDIRECT_URL
@@ -41,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-INSTALLED_APPS += ['django_bootstrap5', 'django_seed']
+INSTALLED_APPS += ['django_bootstrap5', 'cloudinary',]
 
 INSTALLED_APPS += ['home','fornecedores','clientes','funcionarios','produtos','servicos','agendamentos']
 
@@ -79,14 +82,7 @@ WSGI_APPLICATION = 'agenda.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'agenda',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse(config('DATABASE_URL'))
 }
 
 
@@ -154,3 +150,9 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
+
+cloudinary.config(
+    cloud_name=config('CLOUD_NAME'),
+    api_key=config('API_KEY'),
+    api_secret=config('API_SECRET'),
+)
